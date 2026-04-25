@@ -1,86 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-foreground: #ffffff;
-  
-  --surface: #f3f4f6;
-  --surface-hover: #e5e7eb;
-  
-  --border: #e5e7eb;
-  --muted: #6b7280;
-  
+@theme {
+  /* Brand colors */
+  --color-primary: #6366f1;
+  --color-primary-container: #818cf8;
+  --color-primary-fixed: #e0e2ff;
+  --color-primary-fixed-dim: #a5b4fc;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #e0e2ff;
+  --color-on-primary-fixed: #1e1b4b;
+  --color-on-primary-fixed-variant: #4338ca;
+  --color-inverse-primary: #a5b4fc;
+
+  --color-secondary: #6c6e7e;
+  --color-secondary-container: #d8dae6;
+  --color-secondary-fixed: #d8dae6;
+  --color-secondary-fixed-dim: #b8baca;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #585a68;
+  --color-on-secondary-fixed: #1a1b26;
+  --color-on-secondary-fixed-variant: #404252;
+
+  --color-tertiary: #7c3aed;
+  --color-tertiary-container: #a78bfa;
+  --color-tertiary-fixed: #ede9fe;
+  --color-tertiary-fixed-dim: #c4b5fd;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #3b1f63;
+  --color-on-tertiary-fixed: #2e1065;
+  --color-on-tertiary-fixed-variant: #5b21b6;
+
+  --color-error: #dc2626;
+  --color-error-container: #fee2e2;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #991b1b;
+
+  /* Surface & background */
+  --color-background: #e8eaf0;
+  --color-on-background: #2e3040;
+  --color-surface: #e8eaf0;
+  --color-surface-dim: #d4d6dc;
+  --color-surface-bright: #edeef4;
+  --color-surface-variant: #dcdee4;
+  --color-surface-tint: #6366f1;
+  --color-surface-container-lowest: #f0f2f8;
+  --color-surface-container-low: #e5e7ed;
+  --color-surface-container: #e2e4ea;
+  --color-surface-container-high: #dcdee4;
+  --color-surface-container-highest: #d6d8de;
+  --color-on-surface: #2e3040;
+  --color-on-surface-variant: #585a68;
+  --color-inverse-surface: #2e3040;
+  --color-inverse-on-surface: #e8eaf0;
+
+  --color-outline: #8a8c9a;
+  --color-outline-variant: #d0d2dc;
+
+  /* Typography */
+  --font-headline: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-label: 'Plus Jakarta Sans', sans-serif;
+
+  /* Border radius */
   --radius: 0.5rem;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    
-    --primary: #3b82f6;
-    --primary-hover: #60a5fa;
-    --primary-foreground: #ffffff;
-    
-    --surface: #171717;
-    --surface-hover: #262626;
-    
-    --border: #262626;
-    --muted: #a1a1aa;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Premium utility classes */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius);
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-}
-
-.btn-primary:active {
-  transform: scale(0.98);
+  /* Neomorphic shadows */
+  --shadow-neo-raised: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6);
+  --shadow-neo-inset: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
 }
