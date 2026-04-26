@@ -12,6 +12,8 @@ export interface MatchVideo {
   filename: string;
   homeTeam: string;
   awayTeam: string;
+  homeTeamLogo: string | null;
+  awayTeamLogo: string | null;
   homeScore: number;
   awayScore: number;
   competition: string;
@@ -57,6 +59,8 @@ function parseFilename(
     filename: key.replace('matches/', ''),
     homeTeam,
     awayTeam,
+    homeTeamLogo: null,
+    awayTeamLogo: null,
     homeScore: parseInt(homeScore, 10),
     awayScore: parseInt(awayScore, 10),
     competition: normalizeCompetition(competition),
@@ -120,6 +124,25 @@ async function fetchAnalysisStatuses(
   return map;
 }
 
+async function fetchTeamLogos(teamNames: string[]): Promise<Map<string, string>> {
+  if (teamNames.length === 0) return new Map();
+
+  const { data, error } = await supabase
+    .from('ref_teams')
+    .select('team_name, logo_url')
+    .in('team_name', teamNames);
+
+  if (error) return new Map();
+
+  const map = new Map<string, string>();
+  for (const row of data ?? []) {
+    if (row.team_name && row.logo_url) {
+      map.set(row.team_name, row.logo_url);
+    }
+  }
+  return map;
+}
+
 // ---------------------------------------------------------------------------
 // Presigned URLs
 // ---------------------------------------------------------------------------
@@ -158,16 +181,20 @@ export async function fetchAnalysisPageData(): Promise<MatchVideo[]> {
   if (matches.length === 0) return [];
 
   const keys = matches.map((m) => m.key);
+  const teamNames = Array.from(new Set(matches.flatMap((m) => [m.homeTeam, m.awayTeam])));
 
-  const [statusMap, previewMap] = await Promise.all([
+  const [statusMap, previewMap, logoMap] = await Promise.all([
     fetchAnalysisStatuses(keys).catch(() => new Map<string, { id: string; status: string }>()),
     generatePreviewUrls(keys).catch(() => new Map<string, string>()),
+    fetchTeamLogos(teamNames).catch(() => new Map<string, string>()),
   ]);
 
   return matches.map((m) => {
     const record = statusMap.get(m.key);
     return {
       ...m,
+      homeTeamLogo: logoMap.get(m.homeTeam) ?? null,
+      awayTeamLogo: logoMap.get(m.awayTeam) ?? null,
       matchId: record?.id ?? null,
       analysisStatus: (record?.status as MatchVideo['analysisStatus']) ?? 'not_started',
       previewUrl: previewMap.get(m.key) ?? null,

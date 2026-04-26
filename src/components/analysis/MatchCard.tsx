@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import type { MatchVideo } from '@/lib/queries/analysis';
 
 const NEO_RAISED = '6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6)';
@@ -19,7 +20,17 @@ interface Props {
 }
 
 export default function MatchCard({ match }: Props) {
-  const { homeTeam, awayTeam, homeScore, awayScore, competition, round, analysisStatus } = match;
+  const {
+    homeTeam,
+    awayTeam,
+    homeTeamLogo,
+    awayTeamLogo,
+    homeScore,
+    awayScore,
+    competition,
+    round,
+    analysisStatus,
+  } = match;
   const status = STATUS_CONFIG[analysisStatus];
   const isHilalHome = homeTeam === AL_HILAL;
   const isHilalAway = awayTeam === AL_HILAL;
@@ -50,7 +61,7 @@ export default function MatchCard({ match }: Props) {
             src={match.previewUrl}
             preload="metadata"
             controls
-            className="w-full h-40 object-cover bg-surface-container-highest"
+            className="w-full h-56 md:h-64 object-cover bg-surface-container-highest"
             style={{ display: 'block' }}
           />
         </div>
@@ -59,13 +70,16 @@ export default function MatchCard({ match }: Props) {
       {/* Teams & score */}
       <div className="flex items-center justify-between gap-4">
         {/* Home team */}
-        <div className="flex-1 min-w-0">
-          <p
-            className={`text-sm font-semibold truncate ${isHilalHome ? 'text-primary' : 'text-on-surface'}`}
-          >
-            {homeTeam}
-          </p>
-          <p className="text-xs text-on-surface-variant mt-0.5">Home</p>
+        <div className="flex-1 min-w-0 flex items-center gap-3">
+          <TeamLogo name={homeTeam} logoUrl={homeTeamLogo} />
+          <div className="min-w-0">
+            <p
+              className={`text-sm font-semibold truncate ${isHilalHome ? 'text-primary' : 'text-on-surface'}`}
+            >
+              {homeTeam}
+            </p>
+            <p className="text-xs text-on-surface-variant mt-0.5">Home</p>
+          </div>
         </div>
 
         {/* Score */}
@@ -79,13 +93,16 @@ export default function MatchCard({ match }: Props) {
         </div>
 
         {/* Away team */}
-        <div className="flex-1 min-w-0 text-right">
-          <p
-            className={`text-sm font-semibold truncate ${isHilalAway ? 'text-primary' : 'text-on-surface'}`}
-          >
-            {awayTeam}
-          </p>
-          <p className="text-xs text-on-surface-variant mt-0.5">Away</p>
+        <div className="flex-1 min-w-0 flex items-center justify-end gap-3 text-right">
+          <div className="min-w-0">
+            <p
+              className={`text-sm font-semibold truncate ${isHilalAway ? 'text-primary' : 'text-on-surface'}`}
+            >
+              {awayTeam}
+            </p>
+            <p className="text-xs text-on-surface-variant mt-0.5">Away</p>
+          </div>
+          <TeamLogo name={awayTeam} logoUrl={awayTeamLogo} />
         </div>
       </div>
 
@@ -128,6 +145,39 @@ export default function MatchCard({ match }: Props) {
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+function TeamLogo({ name, logoUrl }: { name: string; logoUrl: string | null }) {
+  if (logoUrl) {
+    return (
+      <div
+        className="relative h-12 w-12 md:h-14 md:w-14 rounded-full bg-background p-2 flex items-center justify-center overflow-hidden flex-shrink-0"
+        style={{ boxShadow: NEO_INSET }}
+      >
+        <Image
+          src={logoUrl}
+          alt={`${name} logo`}
+          fill
+          sizes="56px"
+          className="object-contain p-2"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-background text-xs font-bold text-on-surface-variant flex items-center justify-center flex-shrink-0"
+      style={{ boxShadow: NEO_INSET }}
+      aria-label={`${name} logo unavailable`}
+    >
+      {name
+        .split(' ')
+        .slice(0, 2)
+        .map((part) => part[0])
+        .join('')}
     </div>
   );
 }
