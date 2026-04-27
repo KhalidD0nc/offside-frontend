@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# local agent worktrees
+.claude/
+
 # production
 /build
 
