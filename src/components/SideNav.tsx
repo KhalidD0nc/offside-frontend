@@ -16,9 +16,11 @@ const insetShadow = 'inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgb
 export default function SideNav({
   collapsed,
   onToggle,
+  activeJobCount = 0,
 }: {
   collapsed: boolean;
   onToggle: () => void;
+  activeJobCount?: number;
 }) {
   const pathname = usePathname();
 
@@ -62,6 +64,7 @@ export default function SideNav({
       <nav className="flex-1 space-y-1 text-sm font-medium">
         {navItems.map(({ href, label, icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/');
+          const showAnalysisBadge = href === '/analysis' && activeJobCount > 0;
           return (
             <Link
               key={href}
@@ -69,10 +72,10 @@ export default function SideNav({
               title={collapsed ? label : undefined}
               className={
                 active
-                  ? `text-primary font-semibold rounded-xl m-2 py-3 flex items-center transition-all duration-200 ${
+                  ? `relative text-primary font-semibold rounded-xl m-2 py-3 flex items-center transition-all duration-200 ${
                       collapsed ? 'justify-center px-0' : 'gap-3 px-4'
                     }`
-                  : `text-on-surface-variant m-2 py-3 flex items-center rounded-xl transition-all duration-200 hover:text-primary ${
+                  : `relative text-on-surface-variant m-2 py-3 flex items-center rounded-xl transition-all duration-200 hover:text-primary ${
                       collapsed ? 'justify-center px-0' : 'gap-3 px-4'
                     }`
               }
@@ -81,14 +84,27 @@ export default function SideNav({
                   ? { boxShadow: insetShadow }
                   : undefined
               }
-            >
-              <span
-                className="material-symbols-outlined"
-                style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
               >
-                {icon}
-              </span>
-              {!collapsed && label}
+                <span
+                  className="material-symbols-outlined"
+                  style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                >
+                  {icon}
+                </span>
+              {!collapsed && (
+                <>
+                  <span className="min-w-0 flex-1">{label}</span>
+                  {showAnalysisBadge && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[11px] font-black text-on-primary animate-pulse">
+                      <span className="material-symbols-outlined text-[13px]">sports_soccer</span>
+                      {activeJobCount}
+                    </span>
+                  )}
+                </>
+              )}
+              {collapsed && showAnalysisBadge && (
+                <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+              )}
             </Link>
           );
         })}
