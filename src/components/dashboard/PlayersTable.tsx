@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 import type { PlayerRow } from '@/lib/queries/dashboard';
 
@@ -218,13 +219,13 @@ export default function PlayersTable({ players }: { players: PlayerRow[] }) {
                       className="py-4 px-4 rounded-r-xl bg-background"
                       style={{ boxShadow: CELL_INSET }}
                     >
-                      <a
+                      <Link
                         href="/analysis"
                         className="px-3 py-1.5 rounded-lg bg-background text-xs font-medium text-primary transition-opacity hover:opacity-70"
                         style={{ boxShadow: NEO_RAISED }}
                       >
                         View
-                      </a>
+                      </Link>
                     </td>
                   </tr>
                   {idx < players.length - 1 && (

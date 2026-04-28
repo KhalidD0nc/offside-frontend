@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import type { MatchVideo } from '@/lib/queries/analysis';
 
 const NEO_RAISED = '6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6)';
@@ -17,9 +18,11 @@ const STATUS_CONFIG = {
 
 interface Props {
   match: MatchVideo;
+  onStartAnalysis?: (match: MatchVideo) => void;
+  isSubmitting?: boolean;
 }
 
-export default function MatchCard({ match }: Props) {
+export default function MatchCard({ match, onStartAnalysis, isSubmitting = false }: Props) {
   const {
     homeTeam,
     awayTeam,
@@ -117,31 +120,47 @@ export default function MatchCard({ match }: Props) {
         </div>
 
         {analysisStatus === 'completed' ? (
-          <button
-            className="text-xs font-semibold text-on-primary bg-primary rounded-xl px-4 py-2 transition-opacity hover:opacity-90"
+          <Link
+            href={`/analysis/${match.matchId}?key=${encodeURIComponent(match.key)}`}
+            className="text-xs font-semibold text-on-primary bg-primary rounded-xl px-4 py-2 transition-opacity hover:opacity-90 inline-flex items-center gap-1.5"
             style={{ boxShadow: NEO_RAISED }}
           >
+            <span
+              className="material-symbols-outlined"
+              style={{ fontVariationSettings: "'FILL' 1", fontSize: '14px' }}
+            >
+              analytics
+            </span>
             View Analysis
-          </button>
+          </Link>
         ) : analysisStatus === 'queued' ? (
           <button
             disabled
-            className="text-xs font-semibold text-on-surface-variant rounded-xl px-4 py-2 opacity-60 cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant rounded-xl px-4 py-2 opacity-60 cursor-not-allowed"
             style={{ boxShadow: NEO_INSET }}
           >
+            <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
             Queued...
           </button>
         ) : analysisStatus === 'failed' ? (
           <button
-            className="text-xs font-semibold text-error border border-error rounded-xl px-4 py-2 transition-opacity hover:opacity-80"
+            type="button"
+            onClick={() => onStartAnalysis?.(match)}
+            disabled={isSubmitting}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-error border border-error rounded-xl px-4 py-2 transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
           >
+            {isSubmitting && <span className="h-2 w-2 rounded-full bg-error animate-pulse" />}
             Retry
           </button>
         ) : (
           <button
-            className="text-xs font-semibold text-primary border border-primary rounded-xl px-4 py-2 transition-opacity hover:opacity-80"
+            type="button"
+            onClick={() => onStartAnalysis?.(match)}
+            disabled={isSubmitting}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary border border-primary rounded-xl px-4 py-2 transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Start Analysis
+            {isSubmitting && <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />}
+            {isSubmitting ? 'Starting...' : 'Start Analysis'}
           </button>
         )}
       </div>
